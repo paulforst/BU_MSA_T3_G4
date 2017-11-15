@@ -8,22 +8,40 @@
 ############################################
 
 #Check that necessary packages are installed
-packages <- c("tidyverse", "tm", "RMySQL")
+packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl")
 new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
 #Load Neccessary Packages
 sapply(packages, require, character.only = TRUE)
 
-#Create DB of locations of articles?
+#Options
+options(stringsAsFactors = FALSE)
+
+#Credentials for API keys and DB conenctions
+source("credentials.R")
 
 #Pull NY Times Articles
+#https://developer.nytimes.com/
+nyt_url <- "https://api.nytimes.com/svc/archive/v1/2017/"
 
-#Pull BBC Articles
+#loop over months
+for (i in 1:3){
+        #Replace "7" with i to perform the loop for the desired months
+        nyt_results <- fromJSON(paste0(nyt_url, 7, ".json?&api-key=", nyt_key))
+}
 
 #Pull Guardian Data
+#https://bonobo.capi.gutools.co.uk/register/developer
 
 #Create Corpus
+
+#Write metadata of articles to database
+#Database connection
+mydb = dbConnect(MySQL(), user=db_user, password=db_password, dbname= db_name, host= db_host)
+
+#Write information to table
+dbWriteTable(mydb, "nytimes", df2, append = 'FALSE', row.names = FALSE)
 
 #Create Train, Test and Validation sets
 
@@ -39,8 +57,8 @@ sapply(packages, require, character.only = TRUE)
 #Classification
 #Lexical Diversity/Reading Level
 #Sentiment Analysis
-#Naive Bayes
-#K-Folds
+#Naive Bayes Classification
+#K-Folds Validation
 #Latent Semantic Analysis (aka Latent Semantic Indexing)
 #Binary classification on multiple sources
 #Article filtering
