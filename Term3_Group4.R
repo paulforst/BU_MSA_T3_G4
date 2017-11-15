@@ -15,15 +15,26 @@ if(length(new.packages)) install.packages(new.packages)
 #Load Neccessary Packages
 sapply(packages, require, character.only = TRUE)
 
-#Create DB of locations of articles?
-
 #Pull NY Times Articles
-
-#Pull BBC Articles
+#https://developer.nytimes.com/
 
 #Pull Guardian Data
+#https://bonobo.capi.gutools.co.uk/register/developer
 
 #Create Corpus
+
+#Write metadata of articles to database
+#DB connection information
+db_host <- "bu-iaa-db.cjoepp1m87gp.us-east-2.rds.amazonaws.com"
+db_user <- 
+db_password <- 
+db_name <- "pforst"
+
+#Database connection
+mydb = dbConnect(MySQL(), user=db_user, password=db_password, dbname= db_name, host= db_host)
+
+#Write information to table
+dbWriteTable(mydb, "articles", df2, append = 'FALSE', row.names = FALSE)
 
 #Create Train, Test and Validation sets
 
