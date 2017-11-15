@@ -7,35 +7,41 @@
 #Output:
 ############################################
 
-#Load Necessary Libraries
-library(tidyverse)
-library(tm)
+#Check that necessary packages are installed
+packages <- c("tidyverse", "tm", "RMySQL")
+new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
 
+#Load Neccessary Packages
+sapply(packages, require, character.only = TRUE)
+
+#Create DB of locations of articles?
 
 #Pull NY Times Articles
 
-
 #Pull BBC Articles
 
-
-#Pull Other Data
-
+#Pull Guardian Data
 
 #Create Corpus
 
-
 #Create Train, Test and Validation sets
 
+#Create model on classification
+#Create model on Lexicial Diversity
 
-#Create Model
+
 #Test Model
 #Validate Model
 
+#Use DB for data organization - use it for document lookup or article URL?
+
 #Classification
 #Lexical Diversity/Reading Level
+#Sentiment Analysis
+#Naive Bayes
 #K-Folds
 #Latent Semantic Analysis (aka Latent Semantic Indexing)
 #Binary classification on multiple sources
 #Article filtering
-#Lexical diversity - Reading level
 #Optimization - penalty for misclassification
