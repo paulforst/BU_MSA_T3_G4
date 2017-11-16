@@ -24,11 +24,16 @@ source("credentials.R")
 #Pull NY Times Articles
 #https://developer.nytimes.com/
 nyt_url <- "https://api.nytimes.com/svc/archive/v1/2017/"
+nyt_articles <- NULL
 
 #loop over months
-for (i in 1:3){
+for (i in 1:2){
         #Replace "7" with i to perform the loop for the desired months
-        nyt_results <- fromJSON(paste0(nyt_url, 7, ".json?&api-key=", nyt_key))
+        nyt_results <- fromJSON(paste0(nyt_url, i, ".json?&api-key=", nyt_key))
+        nyt_df <- nyt_results$response$docs
+        
+        #Can't rbind because of the lists in the data frame, need to figure out how to handle
+        nyt_articles <- rbind(nyt_articles, nyt_df)
 }
 
 #Pull NY Times Articles
