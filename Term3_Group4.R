@@ -72,3 +72,8 @@ dbWriteTable(mydb, "articles", df2, append = 'FALSE', row.names = FALSE)
 #Binary classification on multiple sources
 #Article filtering
 #Optimization - penalty for misclassification
+#
+#
+#
+#Test the Access 
+#
