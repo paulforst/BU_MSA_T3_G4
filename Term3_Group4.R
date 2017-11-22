@@ -32,12 +32,19 @@ for (i in 1:2){
         nyt_results <- fromJSON(paste0(nyt_url, i, ".json?&api-key=", nyt_key))
         nyt_df <- nyt_results$response$docs
         
+        headlines <- as.data.frame(nyt_results[["response"]][["docs"]][["headline"]])
+        #Need to figure out how to pull out data frames of keywords and byline
+        #Keywords will likely need to be a separate table since there are multiple keywords per article
+        #keywords <- nyt_results[["response"]][["docs"]][["keywords"]][["rank"]][[1]]
+        #author <- nyt_results[["response"]][["docs"]][["byline"]][[1]][["original"]]
+        nyt_df <- cbind(nyt_df, headlines)
+        
+        #Drop list columns and other unimportant columns
+        nyt_df <- nyt_df[,-c(4:6,7:13,19,23)]
+        
         #Can't rbind because of the lists in the data frame, need to figure out how to handle
-        nyt_articles <- rbind(nyt_articles, nyt_df)
+        nyt_articles <- bind_rows(nyt_articles, nyt_df)
 }
-
-#Pull NY Times Articles
-#https://developer.nytimes.com/
 
 #Pull Guardian Data
 #https://bonobo.capi.gutools.co.uk/register/developer
@@ -50,12 +57,14 @@ mydb = dbConnect(MySQL(), user=db_user, password=db_password, dbname= db_name, h
 
 #Write information to table
 dbWriteTable(mydb, "nytimes", df2, append = 'FALSE', row.names = FALSE)
-dbWriteTable(mydb, "articles", df2, append = 'FALSE', row.names = FALSE)
+dbWriteTable(mydb, "gaurdian", df2, append = 'FALSE', row.names = FALSE)
 
 #Create Train, Test and Validation sets
 
-#Create model on classification
-#Create model on Lexicial Diversity
+#WordToVec - Andrew
+#Lexical Diversity - Paul
+#Naive Bayes - Jay
+#SVM - Jay
 
 
 #Test Model
@@ -64,7 +73,6 @@ dbWriteTable(mydb, "articles", df2, append = 'FALSE', row.names = FALSE)
 #Use DB for data organization - use it for document lookup or article URL?
 
 #Classification
-#Lexical Diversity/Reading Level
 #Sentiment Analysis
 #Naive Bayes Classification
 #K-Folds Validation
