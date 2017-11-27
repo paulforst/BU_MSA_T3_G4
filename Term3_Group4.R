@@ -21,10 +21,19 @@ options(stringsAsFactors = FALSE)
 #Credentials for API keys and DB conenctions
 source("credentials.R")
 
+#Functions
+nyt_keywords <- function(keywords_df) {
+    id_key <- rep(keywords_df[[1]], nrow(keywords_df[[2]]))
+    results <- cbind(id_key, keywords_df[[2]])
+    #print(results)
+    return(as.data.frame(results))
+}
+
 #Pull NY Times Articles
 #https://developer.nytimes.com/
 nyt_url <- "https://api.nytimes.com/svc/archive/v1/2017/"
 nyt_articles <- NULL
+keywords <- NULL
 
 #loop over months
 for (i in 1:2){
@@ -35,7 +44,9 @@ for (i in 1:2){
         headlines <- as.data.frame(nyt_results[["response"]][["docs"]][["headline"]])
         #Need to figure out how to pull out data frames of keywords and byline
         #Keywords will likely need to be a separate table since there are multiple keywords per article
-        #keywords <- nyt_results[["response"]][["docs"]][["keywords"]][["rank"]][[1]]
+        temp_df <- as.data.frame(cbind(nyt_results[["response"]][["docs"]][["_id"]],
+                                       nyt_results[["response"]][["docs"]][["keywords"]]))
+        keywords <- rbind(keywords, apply(temp_df, 1, nyt_keywords))
         #author <- nyt_results[["response"]][["docs"]][["byline"]][[1]][["original"]]
         nyt_df <- cbind(nyt_df, headlines)
         
