@@ -8,7 +8,7 @@
 ############################################
 
 #Check that necessary packages are installed
-packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl")
+packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl", "gtools")
 new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
@@ -22,18 +22,21 @@ options(stringsAsFactors = FALSE)
 source("credentials.R")
 
 #Functions
-nyt_keywords <- function(keywords_df) {
+nyt_keywords_func <- function(keywords_df) {
+    if(nrow(keywords_df[[2]]) == 0) {return(NULL)}
+    
+    if("isMajor" %in% colnames(keywords_df[[2]])) {
+        colnames(keywords_df[[2]])[colnames(keywords_df[[2]])=="isMajor"] <- "is_major"
+    }
     id_key <- rep(keywords_df[[1]], nrow(keywords_df[[2]]))
-    results <- cbind(id_key, keywords_df[[2]])
-    #print(results)
-    return(as.data.frame(results))
+    results <- cbind.data.frame(id_key, keywords_df[[2]])
 }
 
 #Pull NY Times Articles
 #https://developer.nytimes.com/
 nyt_url <- "https://api.nytimes.com/svc/archive/v1/2017/"
 nyt_articles <- NULL
-keywords <- NULL
+nyt_keywords <- NULL
 
 #loop over months
 for (i in 1:2){
@@ -42,19 +45,29 @@ for (i in 1:2){
         nyt_df <- nyt_results$response$docs
         
         headlines <- as.data.frame(nyt_results[["response"]][["docs"]][["headline"]])
-        #Need to figure out how to pull out data frames of keywords and byline
-        #Keywords will likely need to be a separate table since there are multiple keywords per article
+        
+        #Keywords need to be a separate table since there are multiple keywords per article
         temp_df <- as.data.frame(cbind(nyt_results[["response"]][["docs"]][["_id"]],
                                        nyt_results[["response"]][["docs"]][["keywords"]]))
-        keywords <- rbind(keywords, apply(temp_df, 1, nyt_keywords))
+        keywords <- do.call("smartbind", apply(temp_df, 1, nyt_keywords_func))
+        nyt_keywords <- rbind(nyt_keywords, keywords)
+        
         #author <- nyt_results[["response"]][["docs"]][["byline"]][[1]][["original"]]
+        
         nyt_df <- cbind(nyt_df, headlines)
         
         #Drop list columns and other unimportant columns
         nyt_df <- nyt_df[,-c(4:6,7:13,19,23)]
         
-        #Can't rbind because of the lists in the data frame, need to figure out how to handle
+        #Bind the new articles with the prior set
         nyt_articles <- bind_rows(nyt_articles, nyt_df)
+        
+        #Remove variables to free space
+        rm(temp_df)
+        rm(keywords)
+        rm(nyt_results)
+        rm(nyt_df)
+        rm(headlines)
 }
 
 #Pull Guardian Data
