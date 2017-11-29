@@ -8,7 +8,7 @@
 ############################################
 
 #Check that necessary packages are installed
-packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl", "gtools")
+packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl", "gtools", "GuardianR")
 new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
@@ -32,6 +32,12 @@ nyt_keywords_func <- function(keywords_df) {
     results <- cbind.data.frame(id_key, keywords_df[[2]])
 }
 
+nyt_author_func <- function(author) {
+    x <- author$original
+    if(length(x) == 0) return("NA")
+    x <- gsub("^By ","",x)
+}
+
 #Pull NY Times Articles
 #https://developer.nytimes.com/
 nyt_url <- "https://api.nytimes.com/svc/archive/v1/2017/"
@@ -52,13 +58,15 @@ for (i in 1:2){
         keywords <- do.call("smartbind", apply(temp_df, 1, nyt_keywords_func))
         nyt_keywords <- rbind(nyt_keywords, keywords)
         
-        #author <- nyt_results[["response"]][["docs"]][["byline"]][[1]][["original"]]
+        temp_df <- nyt_results[["response"]][["docs"]][["byline"]]
+        author <- sapply(temp_df, nyt_author_func)
         
-        nyt_df <- cbind(nyt_df, headlines)
+        nyt_df <- cbind(nyt_df, headlines, author)
         
         #Drop list columns and other unimportant columns
-        nyt_df <- nyt_df[,-c(4:6,7:13,19,23)]
-        
+        drop_cols <- c("abstract","print_page","blog","multimedia","headline","keywords","byline")
+        nyt_df <- nyt_df[,!names(nyt_df) %in% drop_cols]
+
         #Bind the new articles with the prior set
         nyt_articles <- bind_rows(nyt_articles, nyt_df)
         
@@ -68,10 +76,14 @@ for (i in 1:2){
         rm(nyt_results)
         rm(nyt_df)
         rm(headlines)
+        rm(author)
 }
 
 #Pull Guardian Data
 #https://bonobo.capi.gutools.co.uk/register/developer
+guardian_url <- "https://api.nytimes.com/svc/archive/v1/2017/"
+guardian_articles <- NULL
+
 
 #Create Corpus
 
@@ -80,8 +92,9 @@ for (i in 1:2){
 mydb = dbConnect(MySQL(), user=db_user, password=db_password, dbname= db_name, host= db_host)
 
 #Write information to table
-dbWriteTable(mydb, "nytimes", df2, append = 'FALSE', row.names = FALSE)
-dbWriteTable(mydb, "gaurdian", df2, append = 'FALSE', row.names = FALSE)
+dbWriteTable(mydb, "nyt_articles", nyt_articles, append = 'FALSE', row.names = FALSE)
+dbWriteTable(mydb, "nyt_keywords", nyt_keywords, append = 'FALSE', row.names = FALSE)
+dbWriteTable(mydb, "guardian_articles", guardian_articles, append = 'FALSE', row.names = FALSE)
 
 #Create Train, Test and Validation sets
 
