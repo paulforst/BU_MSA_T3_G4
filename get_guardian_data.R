@@ -1,7 +1,19 @@
 
+#  ============================================================================
+#                       Term 3 - Group 4 Group Project            
+#  ============================================================================
+#  Purpose: This script contains functions that will aid in the process of pulling 
+#           Guardian articles and converting them into a data frame for modeling purposes. 
+#  ============================================================================
+#  Created: 11/29/2017
+#  Members: Tammy Hang, Jay Bektasevic, Andrew Brill, Paul Forst 
+#           Bellarmine University
+#  ----------------------------------------------------------------------------
+
+
 #   ____________________________________________________________________________
-#   Script to get Guardian news articles into data frame for modeling purposes
-    
+#   Load Required Packages and Files                                        ####
+
     # Verify that required packages are installed
     packages <- c("httr", "rjson", "lubridate", "plyr", "data.table")
     new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
@@ -19,6 +31,9 @@
         paste0("http://content.guardianapis.com/search?section=", x, paste0("&order-by=newest&show-fields=body&page-size=50&api-key=", guardian_key))
     })
     
+#   ____________________________________________________________________________
+#   Create Functions                                                        ####
+
     # Write a function to get results
     get_results <- function(url, pageNum) {
         # If pagenum is > 1, then add
@@ -112,7 +127,10 @@
         })
         return(rbindlist(results, fill = TRUE))
     }
-    
+       
+#   ____________________________________________________________________________
+#   Output                                                                  ####
+
     # Convert results to the data frame
     final_data <- to_df(master)
     
