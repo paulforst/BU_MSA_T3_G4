@@ -1,14 +1,14 @@
 
-#  ============================================================================
+#   ============================================================================
 #                       Term 3 - Group 4 Group Project            
-#  ============================================================================
-#  Purpose: This script contains functions that will aid in the process of pulling 
-#           Guardian articles and converting them into a data frame for modeling purposes. 
-#  ============================================================================
-#  Created: 11/29/2017
-#  Members: Tammy Hang, Jay Bektasevic, Andrew Brill, Paul Forst 
-#           Bellarmine University
-#  ----------------------------------------------------------------------------
+#   ============================================================================
+#   Purpose: This script contains functions that will aid in the process of pulling 
+#            Guardian articles and converting them into a data frame for modeling purposes. 
+#   ============================================================================
+#   Created: 11/29/2017
+#   Members: Tammy Hang, Jay Bektasevic, Andrew Brill, Paul Forst 
+#            Bellarmine University
+#   ----------------------------------------------------------------------------
 
 
 #   ____________________________________________________________________________
