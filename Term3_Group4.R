@@ -16,7 +16,7 @@
 
 
 #   Check that necessary packages are installed
-    packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl", "gtools", "GuardianR")
+    packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl", "gtools", "GuardianR", "XML")
     new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
     if(length(new.packages)) install.packages(new.packages)
 
@@ -89,7 +89,23 @@
             rm(author)
     }
 
-
+#   Function to extract body from the NYT articles
+    get_body <- function(url){
+        
+        source <-  getURL(url,encoding="UTF-8") # Specify encoding when dealing with non-latin characters
+        
+        parsed <- htmlParse(source)
+        
+        paste(unlist(xpathSApply(parsed, "//p[@ class='story-body-text story-content']", xmlValue)),collapse = "")
+        
+    }
+#   Initialize body_container 
+    body_container <- NULL
+    
+    for (i in 1:length(nyt_articles[[1]])) {
+        body_container[[i]] <- get_body(nyt_articles[[1]][i])
+    }
+    
 
 #   ____________________________________________________________________________
 #   Guardian Data                                                           ####
