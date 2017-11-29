@@ -103,7 +103,7 @@
     body_container <- NULL
     
     for (i in 1:length(nyt_articles[[1]])) {
-        body_container[[i]] <- get_body(nyt_articles[[1]][i])
+        body_container[[i]] <- tryCatch(get_body(nyt_articles[[1]][i]), error = function(e) NULL) # tryCatch() will ignore error and continue on with the loop
     }
     
 
