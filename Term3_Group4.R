@@ -25,6 +25,7 @@
 
 #   Options
     options(stringsAsFactors = FALSE)
+    set.seed(2017)
 
 #   Load source files    
 #   Credentials for API keys and DB conenctions
@@ -40,14 +41,19 @@
     #Creates the global variables byt_articles and nyt_keywords
     get_nyt_data()
     
-    #   Initialize body_container 
+#   Initialize body_container 
     body_container <- NULL
     
-    for (i in 1:length(nyt_articles[[1]])) {
-    #for (i in 1:10) {
-        body_container[[i]] <- tryCatch(get_nyt_body(nyt_articles[[1]][i]), error = function(e) NULL) 
+#   Randomly select 5,000 articles to use for modeling
+    nyt_sample <- nyt_articles[sample(1:nrow(nyt_articles), 5000, replace=FALSE),]
+    
+    for (i in 1:length(nyt_sample[[1]])) {
+        body_container[[i]] <- tryCatch(get_nyt_body(nyt_sample[[1]][i]), error = function(e) NULL) 
         # tryCatch() will ignore error and continue on with the loop
     }
+    
+    # Save as Rdata
+    save(body_container, file = "nyt_sample_body.Rdata")
 
 #   ____________________________________________________________________________
 #   Guardian Data                                                           ####

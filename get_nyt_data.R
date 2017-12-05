@@ -28,15 +28,21 @@ sapply(packages, require, character.only = TRUE)
 nyt_keywords_func <- function(keywords_df) {
     if(nrow(keywords_df[[2]]) == 0) {return(NULL)}
     
+    #API changes the name of this column from month to month
     if("isMajor" %in% colnames(keywords_df[[2]])) {
         colnames(keywords_df[[2]])[colnames(keywords_df[[2]])=="isMajor"] <- "is_major"
+    }
+    if("major" %in% colnames(keywords_df[[2]])) {
+        colnames(keywords_df[[2]])[colnames(keywords_df[[2]])=="major"] <- "is_major"
     }
     id_key <- rep(keywords_df[[1]], nrow(keywords_df[[2]]))
     results <- cbind.data.frame(id_key, keywords_df[[2]])
 }
 
 nyt_author_func <- function(author) {
-    x <- author$original
+    #Class of the byline changes from list to vector, using 
+    if(class(author) == "list") x <- author$original
+    else x <- author
     if(length(x) == 0) return("NA")
     x <- gsub("^By ","",x)
 }
@@ -53,8 +59,8 @@ get_nyt_data <- function() {
     nyt_keywords <<- NULL
     
     #   Loop over months
-    for (i in 1:2){
-        #Replace "7" with i to perform the loop for the desired months
+    for (i in 1:11){
+        
         nyt_results <- fromJSON(paste0(nyt_url, i, ".json?&api-key=", nyt_key))
         nyt_df <- nyt_results$response$docs
         
