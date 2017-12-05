@@ -16,7 +16,7 @@
 
 
 #   Check that necessary packages are installed
-    packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl", "gtools", "XML", "koRpus")
+    packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl", "gtools", "XML", "koRpus", "tidytext")
     new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
     if(length(new.packages)) install.packages(new.packages)
 
@@ -66,8 +66,6 @@
 #   ____________________________________________________________________________
 #   Create Corpus                                                           ####
 
-nytCorpus <- clean.corpus(body_container)
-
 
 #   ____________________________________________________________________________
 #   Database Connection                                                     ####
@@ -84,6 +82,18 @@ nytCorpus <- clean.corpus(body_container)
 
 #WordToVec - Andrew
 #Lexical Diversity - Paul
+
+#   Initialize lexical diversity variable     
+    nyt_lexdiv <- NULL
+    
+#   Loop through each NYT Article body to general lexical diversity    
+    for (i in 1:length(body_container)) {
+        nytToken <- tokenize(body_container[i], format = "obj", lang = "en")
+        #lexdiv <- lex.div(nytToken, quiet = TRUE)
+        lexdiv <- koRpus::MTLD(nytToken)
+        nyt_lexdiv[i] <- lexdiv@MTLD[[1]]
+    }
+    
 #Naive Bayes - Jay
 #SVM - Jay
 
