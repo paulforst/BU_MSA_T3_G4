@@ -50,6 +50,7 @@
     for (i in 1:length(nyt_sample[[1]])) {
         body_container[[i]] <- tryCatch(get_nyt_body(nyt_sample[[1]][i]), error = function(e) NULL) 
         # tryCatch() will ignore error and continue on with the loop
+        print(paste0("Scraping article # ", i)) # print the index of an article being scraped
     }
     
     # Save as Rdata
@@ -66,7 +67,7 @@
 #   ____________________________________________________________________________
 #   Create Corpus                                                           ####
 
-nytCorpus <- clean.corpus(body_container)
+    nytCorpus <- clean.corpus(body_container)
 
 
 #   ____________________________________________________________________________
