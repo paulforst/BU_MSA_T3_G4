@@ -16,7 +16,8 @@
 
 
 #   Check that necessary packages are installed
-    packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl", "gtools", "XML", "koRpus", "tidytext")
+    packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl", "gtools", "XML", "koRpus", 
+                  "tidytext", "ngram")
     new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
     if(length(new.packages)) install.packages(new.packages)
 
@@ -77,6 +78,16 @@
 #   Combine the datasets    
     combined_data <- rbind(final_data, nyt_final_data)
     
+    combined_data$word_count <- NULL
+    
+#   Loop to get a word count of each article
+    
+    for (i in 1:nrow(combined_data[,1])) {
+        
+        # print(paste0("Row index ", i, " Count of words:  ", wordcount(combined_data$body[i])))
+        
+        combined_data$word_count[i] <- wordcount(combined_data$body[i])
+    }
 
     
     save(combined_data, file = "combined_final_data.Rdata")
