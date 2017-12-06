@@ -90,8 +90,11 @@ get_nyt_data <- function() {
         #Bind the new articles with the prior set
         nyt_articles <- bind_rows(nyt_articles, nyt_df)
         
+        sections <- c("Sports", "Politics", "World", "Travel")
+        
         #Filter out non-articles from the resutls
-        nyt_articles <<- filter(nyt_articles, nyt_articles$document_type == 'article')
+        nyt_articles <- filter(nyt_articles, nyt_articles$document_type == 'article')
+        nyt_articles <<- filter(nyt_articles, nyt_articles$section_name %in% sections)
         
         #Remove variables to free space
         rm(temp_df)
