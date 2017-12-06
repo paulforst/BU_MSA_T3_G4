@@ -41,7 +41,10 @@ clean.corpus <- function(x, add_stopwords = NULL, stemming = FALSE) {
     corpus <- tm_map(corpus, removePunctuation)
     corpus <- tm_map(corpus, stripWhitespace)
     corpus <- tm_map(corpus, removeNumbers)
+<<<<<<< HEAD
     
+=======
+>>>>>>> 63ee259eb4d3de8ed641266df994d645b8a610c8
     corpus <- tm_map(corpus, removeSpecialChars)
     #Remove standard stopwords
     if(is.null(add_stopwords)){
