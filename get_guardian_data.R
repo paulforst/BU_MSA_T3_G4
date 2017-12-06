@@ -138,6 +138,8 @@
     # Convert section variable to factor
     final_data$section <- as.factor(final_data$section)
     
+    final_data$source <- "Guardian"
+    
     
     # Remove unnecessary variables 
     rm(data, main, master)
