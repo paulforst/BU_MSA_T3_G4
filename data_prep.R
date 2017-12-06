@@ -29,14 +29,35 @@ sapply(packages, require, character.only = TRUE)
 
 #   Utilize clean.corpus() function to clean corpus
 
-    corpus_clean <- clean.corpus(source_data)
+    corp <- clean.corpus(combined_data$body)
+
 
 
 #   create term document matrix (tdm)
-    tdm <- DocumentTermMatrix(corpus)
+    tdm <- DocumentTermMatrix(corp)
 
-#   inspecting the tdm
-    dim(tdm) 
+  
+    
+    inspect(corp)
+    
+    #   ____________________________________________________________________________
+    #   Create a Term Document Matrix                                          
+    
+    tdm <- TermDocumentMatrix(corp)
+    freq.term <- findFreqTerms(tdm, lowfreq = 5)
+    term.freq <- rowSums(as.matrix(tdm))
+    term.freq <- subset(term.freq, term.freq >= 10)
+    #   Store term frequency in a df    
+    df <- data.frame(term = names(term.freq), freq = sort(term.freq, decreasing = TRUE))
+    #   Plot most frequent terms    
+    ggplot(df, aes(x=term, y=freq)) + geom_bar(stat="identity") +
+        xlab("Terms") + ylab("Count") + coord_flip() +
+        theme(axis.text=element_text(size=7))
+    
+    
+    
+    
+#   inspecting the tdm0909                                                                                                                                                              dim(tdm) 
 
 #   sample of columns (words)    
     colnames(tdm)[20:30]     

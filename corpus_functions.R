@@ -42,7 +42,7 @@ clean.corpus <- function(x, add_stopwords = NULL, stemming = FALSE) {
     corpus <- tm_map(corpus, stripWhitespace)
     corpus <- tm_map(corpus, removeNumbers)
     
-    corpus <- tm_map(docs, removeSpecialChars)
+    corpus <- tm_map(corpus, removeSpecialChars)
     #Remove standard stopwords
     if(is.null(add_stopwords)){
         corpus <- tm_map(corpus, removeWords, stopwords('english'))
