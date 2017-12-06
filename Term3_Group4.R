@@ -54,8 +54,16 @@
     }
     
     # Save as Rdata
-    save(body_container, file = "nyt_sample_body.Rdata")
+    save(body_container, file = "nyt_body.Rdata")
 
+    
+    
+    nyt_sample_with_body <- cbind(nyt_sample, body_container)
+    
+    features <- c("web_url", "main",  "body_container", "section_name", "pub_date")
+    
+    nyt_final_data <- nyt_sample_with_body[features]
+    colnames(nyt_final_data)[] <- colnames(final_data)
 #   ____________________________________________________________________________
 #   Guardian Data                                                           ####
 

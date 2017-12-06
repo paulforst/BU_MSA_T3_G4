@@ -147,7 +147,7 @@
     save(final_data, file = "guardian_final.Rdata")
 
   
-
+    save(body_container, file = "nyt_body.Rdata")
 
 
 
