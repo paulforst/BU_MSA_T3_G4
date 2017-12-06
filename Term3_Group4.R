@@ -50,28 +50,36 @@
     for (i in 1:length(nyt_sample[[1]])) {
         body_container[[i]] <- tryCatch(get_nyt_body(nyt_sample[[1]][i]), error = function(e) NULL) 
         # tryCatch() will ignore error and continue on with the loop
-        print(paste0("Scraping article # ", i)) # print the index of an article being scraped
+        print(paste0("Scraping article # ", i, " of ", length(nyt_sample[[1]]))) # print the index of an article being scraped
     }
     
     # Save as Rdata
     save(body_container, file = "nyt_body.Rdata")
 
-    
-    
+#   bind the article body with the rest of meta data    
     nyt_sample_with_body <- cbind(nyt_sample, body_container)
     
+#   select features
     features <- c("web_url", "main",  "body_container", "section_name", "pub_date")
     
     nyt_final_data <- nyt_sample_with_body[features]
+    
+#   match the column names of both datasets
+
     colnames(nyt_final_data)[] <- colnames(final_data)
     
+#   Remove records with no body text
     nyt_final_data <- nyt_final_data[!(is.na(nyt_final_data$body) | nyt_final_data$body==""), ]
     
+#   Add a column to label the source
     nyt_final_data$source <- "NY Times"
+
+#   Combine the datasets    
+    combined_data <- rbind(final_data, nyt_final_data)
     
-    combine_data <- rbind(final_data, nyt_final_data)
+
     
-    save(combine_data, file = "combined_final_data.Rdata")
+    save(combined_data, file = "combined_final_data.Rdata")
     
 #   ____________________________________________________________________________
 #   Guardian Data                                                           ####
