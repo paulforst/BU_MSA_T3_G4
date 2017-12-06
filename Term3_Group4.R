@@ -17,7 +17,7 @@
 
 #   Check that necessary packages are installed
     packages <- c("tidyverse", "tm", "RMySQL", "jsonlite", "lubridate", "RCurl", "gtools", "XML", "koRpus", 
-                  "tidytext", "ngram")
+                  "tidytext", "ngram", "stringr")
     new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
     if(length(new.packages)) install.packages(new.packages)
 
@@ -77,10 +77,10 @@
 
 #   Combine the datasets    
     combined_data <- rbind(final_data, nyt_final_data)
-    
+#   Initilize the word_count attribute
     combined_data$word_count <- NULL
     
-#   Loop to get a word count of each article
+#   Loop to get the word count of each article
     
     for (i in 1:nrow(combined_data[,1])) {
         
@@ -88,7 +88,25 @@
         
         combined_data$word_count[i] <- wordcount(combined_data$body[i])
     }
+    
+#   Plot the density 
+    hist(combined_data$word_count, prob=TRUE, col="grey")
+    lines(density(combined_data$word_count), col="blue", lwd=2)
+    
+#   Remove articles with <200 and >5,000 words    
+    combined_data <- combined_data[combined_data$word_count >= 200 & combined_data$word_count <= 2000]
+    
+    hist(combined_data$word_count, prob = TRUE, col="grey")
+    lines(density(combined_data$word_count), col="blue", lwd=2)
+    
+    table(combined_data$section)
+    
+    table(combined_data$source)
 
+#   Fixed the world news section        
+    combined_data$section <- str_replace(combined_data$section, "World news", "World")
+   
+    table(combined_data$section)
     
     save(combined_data, file = "combined_final_data.Rdata")
     
