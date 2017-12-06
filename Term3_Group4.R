@@ -64,6 +64,8 @@
     
     nyt_final_data <- nyt_sample_with_body[features]
     colnames(nyt_final_data)[] <- colnames(final_data)
+    
+    save(nyt_final_data, file = "nyt_final_data.Rdata")
 #   ____________________________________________________________________________
 #   Guardian Data                                                           ####
 
