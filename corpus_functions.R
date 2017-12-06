@@ -30,6 +30,9 @@ sapply(packages, require, character.only = TRUE)
 #       stemming is a boolean to know if stemming should be performed
 #Outputs:
 #       cleaned corpus of the orginal text
+removeSpecialChars <- function(x) gsub("[^a-zA-Z0-9 ]","",x)
+
+
 clean.corpus <- function(x, add_stopwords = NULL, stemming = FALSE) {
 
     #Creating corpus from vector
@@ -39,6 +42,7 @@ clean.corpus <- function(x, add_stopwords = NULL, stemming = FALSE) {
     corpus <- tm_map(corpus, stripWhitespace)
     corpus <- tm_map(corpus, removeNumbers)
     
+    corpus <- tm_map(docs, removeSpecialChars)
     #Remove standard stopwords
     if(is.null(add_stopwords)){
         corpus <- tm_map(corpus, removeWords, stopwords('english'))
@@ -53,3 +57,5 @@ clean.corpus <- function(x, add_stopwords = NULL, stemming = FALSE) {
     
     return(corpus)
 }
+
+
