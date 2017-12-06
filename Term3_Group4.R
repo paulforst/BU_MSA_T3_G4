@@ -65,7 +65,14 @@
     nyt_final_data <- nyt_sample_with_body[features]
     colnames(nyt_final_data)[] <- colnames(final_data)
     
-    save(nyt_final_data, file = "nyt_final_data.Rdata")
+    nyt_final_data <- nyt_final_data[!(is.na(nyt_final_data$body) | nyt_final_data$body==""), ]
+    
+    nyt_final_data$source <- "NY Times"
+    
+    combine_data <- rbind(final_data, nyt_final_data)
+    
+    save(combine_data, file = "combined_final_data.Rdata")
+    
 #   ____________________________________________________________________________
 #   Guardian Data                                                           ####
 
