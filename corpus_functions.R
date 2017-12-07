@@ -57,7 +57,7 @@
         }                             
 #       Ensures that the corpus is returned in a plain text, otherwise, depending on the version of 
 #       "tm" package it can cause issues with the creation of Document-Term Matrix.  
-        corpus1 <- tm_map(corpus, PlainTextDocument)
+        corpus <- tm_map(corpus, PlainTextDocument)
         return(corpus)
     }
 
