@@ -34,7 +34,7 @@ sapply(packages, require, character.only = TRUE)
     inspect(corp[1:5])
 
 #   create term document matrix (tdm)
-    dtm <- DocumentTermMatrix(corp)
+    tdm <- DocumentTermMatrix(corp)
 
   
     
@@ -43,22 +43,18 @@ sapply(packages, require, character.only = TRUE)
     #   ____________________________________________________________________________
     #   Create a Term Document Matrix                                          
     
-    tdm <- TermDocumentMatrix(corp)
-    freq.term <- findFreqTerms(tdm, lowfreq = 5)
+    #tdm <- TermDocumentMatrix(corp)
     
-    freq.term[1]
- 
-    
-    
-    
-    
+   
 #   inspecting the tdm                                                                                                                                                             dim(tdm) 
 
 #   sample of columns (words)    
     colnames(tdm)[20:30]     
 
 #   find frequent terms: terms that appear in at least # of documents. 
-    findFreqTerms(tdm, 30)    
+    freq.term <- findFreqTerms(tdm, 30)   
+    
+    freq.term[1:5]
         
 #   create tf-idf weighted version of term document matrix
     weightedtdm <- weightTfIdf(tdm)
