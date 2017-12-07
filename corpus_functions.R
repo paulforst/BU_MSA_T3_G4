@@ -31,8 +31,9 @@
 #   Outputs:
 #   cleaned corpus of the orginal text
 
-    clean.corpus <- function(x, add_stopwords = NULL, stemming = FALSE, spelling = FALSE) {
+    clean.corpus <- function(x, add_stopwords = NULL, stemming = FALSE) {
     
+
 #       Creating corpus from vector
         corpus <- Corpus(VectorSource(x))
         corpus <- tm_map(corpus,  removePunctuation)
@@ -51,14 +52,24 @@
         if(stemming){
             corpus <- tm_map(corpus, stemDocument)
         }
-#       Removes misspelled (non-English) words        
-        if(spelling){
-            corpus <- tm_map(corpus, removeWords, sort(unique(unlist(hunspell_find(as.character(corpus)))))) 
-        }                             
+
+                            
 #       Ensures that the corpus is returned in a plain text, otherwise, depending on the version of 
 #       "tm" package it can cause issues with the creation of Document-Term Matrix.  
         corpus <- tm_map(corpus, PlainTextDocument)
         return(corpus)
     }
 
+#       Removes misspelled (non-English) words lang = "en_GB" or "en_US"
+        spelling <- function(corpus, lang = "en_US"){
+            corpus <- tm_map(corpus, 
+                             removeWords,
+                             sort(unique(unlist(hunspell_find(as.character(corpus), 
+                                                              dict = dictionary(lang ))
+                                                )
+                                         )
+                                  )
+                            )
+            return(corpus)
+        }
 

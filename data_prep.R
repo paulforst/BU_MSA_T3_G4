@@ -21,18 +21,22 @@
 #   Load Neccessary Packages
     sapply(packages, require, character.only = TRUE)
 
-
+huns
 
 #   ____________________________________________________________________________
 #   Pre-processing                                                          ####
 
 
 #   Utilize clean.corpus() function to clean corpus
-
+ 
     corp <- clean.corpus(combined_data$body, stemming = TRUE)
 
     inspect(corp[1:5])
 
+#   Remove misspelled words
+    system.time(  
+    corp <- spelling(corp, lang = "en_GB")
+    )
 #   create Document-Term Matrix (tdm)
     tdm <- DocumentTermMatrix(corp)
 
@@ -42,7 +46,7 @@
 
 #   sample of columns (words)    
     colnames(tdm)[20:30]     
-
+# 
 #   find frequent terms: terms that appear in at least # of documents. 
     freq.term <- findFreqTerms(tdm, 30)   
     
