@@ -37,15 +37,13 @@ clean.corpus <- function(x, add_stopwords = NULL, stemming = FALSE) {
 
     #Creating corpus from vector
     corpus <- Corpus(VectorSource(x))
-    corpus <- tm_map(corpus, tolower)
-    corpus <- tm_map(corpus, removePunctuation)
-    corpus <- tm_map(corpus, stripWhitespace)
-    corpus <- tm_map(corpus, removeNumbers)
-<<<<<<< HEAD
-    
-=======
->>>>>>> 63ee259eb4d3de8ed641266df994d645b8a610c8
+   
+    corpus <- tm_map(corpus,  removePunctuation)
+    corpus <- tm_map(corpus,  stripWhitespace)
+    corpus <- tm_map(corpus,  removeNumbers)
+
     corpus <- tm_map(corpus, removeSpecialChars)
+    corpus <- tm_map(corpus, tolower)
     #Remove standard stopwords
     if(is.null(add_stopwords)){
         corpus <- tm_map(corpus, removeWords, stopwords('english'))
@@ -57,7 +55,7 @@ clean.corpus <- function(x, add_stopwords = NULL, stemming = FALSE) {
     if(stemming){
         corpus <- tm_map(corpus, stemDocument)
     }
-    
+    corpus <- tm_map(corpus, PlainTextDocument)
     return(corpus)
 }
 
