@@ -47,7 +47,7 @@
     
 #   The interpretation of this is to say if sparse is equal to .99, then we are removing 
 #   terms that only appear in at most 1% of the data.
-    tdm2 <- removeSparseTerms(tdm, sparse = 0.98) 
+    tdm2 <- removeSparseTerms(tdm, sparse = 0.97) 
     inspect(tdm2)
 #   Inspect a portion of the tdm2
     as.matrix(tdm2)[10:20,20:30]
@@ -74,7 +74,7 @@
     
     
 #   Remove objects that are no longer needed to conserve memory
-    remove(tdm, tdm2, weightedtdm)
+    remove(tdm, combined_data, corp, final_data, nyt_final_data)
 #   ____________________________________________________________________________
 #   Feature Selection                                                       ####
 
@@ -87,7 +87,7 @@
     
     
 #   Select top # variables
-    subset<- cutoff.k(feature_weights, 500)
+    subset<- cutoff.k(feature_weights, 1500)
     
     
 #   Print the final formula that can be used in classification
