@@ -33,7 +33,7 @@
 
     inspect(corp[1:5])
 
-#   Remove misspelled words
+#   Remove misspelled words make sure to specify lang as either "en_US" or "en_GB"
     system.time(  
     corp <- remove_spelling(corp, lang = "en_GB")
     )
@@ -47,7 +47,7 @@
     
 #   The interpretation of this is to say if sparse is equal to .99, then we are removing 
 #   terms that only appear in at most 1% of the data.
-    tdm2 <- removeSparseTerms(tdm, sparse = 0.99) 
+    tdm2 <- removeSparseTerms(tdm, sparse = 0.98) 
     inspect(tdm2)
 #   Inspect a portion of the tdm2
     as.matrix(tdm2)[10:20,20:30]
@@ -79,7 +79,7 @@
 #   Feature Selection                                                       ####
 
 #   Calculate the chi square statistics utilizing function from the Fselector package.
-    feature_weights<- chi.squared(article_class ~ ., tdm)
+    feature_weights<- chi.squared(article.source ~ ., tdm2)
     
     
 #   Print the results 
