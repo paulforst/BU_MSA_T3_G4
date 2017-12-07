@@ -14,12 +14,12 @@
 #   Load Required Packages and Files  
 
 #   Check that necessary packages are installed
-packages <- c("tidyverse", "FSelector")
-new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
-if(length(new.packages)) install.packages(new.packages)
+    packages <- c("tidyverse", "FSelector")
+    new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
+    if(length(new.packages)) install.packages(new.packages)
 
 #   Load Neccessary Packages
-sapply(packages, require, character.only = TRUE)
+    sapply(packages, require, character.only = TRUE)
 
 
 
@@ -33,18 +33,10 @@ sapply(packages, require, character.only = TRUE)
 
     inspect(corp[1:5])
 
-#   create term document matrix (tdm)
+#   create Document-Term Matrix (tdm)
     tdm <- DocumentTermMatrix(corp)
 
-  
-    
-   
-    
-    #   ____________________________________________________________________________
-    #   Create a Term Document Matrix                                          
-    
     #tdm <- TermDocumentMatrix(corp)
-    
    
 #   inspecting the tdm                                                                                                                                                             dim(tdm) 
 

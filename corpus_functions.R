@@ -15,48 +15,48 @@
 #   Load Required Packages and Files  
 
 #   Check that necessary packages are installed
-packages <- c("SnowballC","tm")
-new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
-if(length(new.packages)) install.packages(new.packages)
+    packages <- c("SnowballC","tm")
+    new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
+    if(length(new.packages)) install.packages(new.packages)
 
 #   Load Neccessary Packages
-sapply(packages, require, character.only = TRUE)
+    sapply(packages, require, character.only = TRUE)
 
 
-#Function to perform creating and cleaning a corpos from a vector of text
-#Inputs: 
-#       x is a vector of text
-#       add_stopwords is a vector of additional stopwords to remove from text
-#       stemming is a boolean to know if stemming should be performed
-#Outputs:
-#       cleaned corpus of the orginal text
-removeSpecialChars <- function(x) gsub("[^a-zA-Z0-9 ]","",x)
-
-
-clean.corpus <- function(x, add_stopwords = NULL, stemming = FALSE) {
-
-    #Creating corpus from vector
-    corpus <- Corpus(VectorSource(x))
-   
-    corpus <- tm_map(corpus,  removePunctuation)
-    corpus <- tm_map(corpus,  stripWhitespace)
-    corpus <- tm_map(corpus,  removeNumbers)
-
-    corpus <- tm_map(corpus, removeSpecialChars)
-    corpus <- tm_map(corpus, tolower)
-    #Remove standard stopwords
-    if(is.null(add_stopwords)){
-        corpus <- tm_map(corpus, removeWords, stopwords('english'))
-    } else {
-        #Remove standard plus additional words if submitted
-        corpus <- tm_map(corpus, removeWords, c(add_stopwords, stopwords('english')))
-    }
+#   Function to perform creating and cleaning a corpos from a vector of text
+#   Inputs: 
+#   x is a vector of text
+#   add_stopwords is a vector of additional stopwords to remove from text
+#   stemming is a boolean to know if stemming should be performed
+#   Outputs:
+#   cleaned corpus of the orginal text
     
-    if(stemming){
-        corpus <- tm_map(corpus, stemDocument)
+    removeSpecialChars <- function(x) gsub("[^a-zA-Z0-9 ]","",x)
+
+    clean.corpus <- function(x, add_stopwords = NULL, stemming = FALSE) {
+    
+#       Creating corpus from vector
+        corpus <- Corpus(VectorSource(x))
+        corpus <- tm_map(corpus,  removePunctuation)
+        corpus <- tm_map(corpus,  stripWhitespace)
+        corpus <- tm_map(corpus,  removeNumbers)
+        corpus <- tm_map(corpus, removeSpecialChars)
+        corpus <- tm_map(corpus, tolower)
+#       Remove standard stopwords
+        if(is.null(add_stopwords)){
+            corpus <- tm_map(corpus, removeWords, stopwords('english'))
+        } else {
+#       Remove standard plus additional words if submitted
+            corpus <- tm_map(corpus, removeWords, c(add_stopwords, stopwords('english')))
+        }
+        
+        if(stemming){
+            corpus <- tm_map(corpus, stemDocument)
+        }
+#       Ensures that the corpus is returned in a plain text, otherwise, depending on the version of 
+#       "tm" package it can cause issues with the creation of Document-Term Matrix.  
+        corpus <- tm_map(corpus, PlainTextDocument)
+        return(corpus)
     }
-    corpus <- tm_map(corpus, PlainTextDocument)
-    return(corpus)
-}
 
 
