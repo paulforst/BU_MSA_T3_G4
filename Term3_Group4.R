@@ -139,15 +139,22 @@
 #WordToVec - Andrew
 #Lexical Diversity - Paul
 
-#   Initialize lexical diversity variable     
-    nyt_lexdiv <- NULL
+#   Initialize lexical diversity variables     
+    lexdiv <- NULL
+    read_age <- NULL
     
-#   Loop through each NYT Article body to general lexical diversity    
-    for (i in 1:length(body_container)) {
-        nytToken <- tokenize(body_container[i], format = "obj", lang = "en")
-        #lexdiv <- lex.div(nytToken, quiet = TRUE)
-        lexdiv <- koRpus::MTLD(nytToken)
-        nyt_lexdiv[i] <- lexdiv@MTLD[[1]]
+#   Loop through each article body to general lexical diversity
+    text_body <- combined_data$body
+    for (i in 1:length(text_body)) {
+        token <- tokenize(text_body[i], format = "obj", lang = "en")
+        
+        #Use Measure of Textual Lexical Diversity
+        temp <- koRpus::MTLD(token, quiet = TRUE)
+        lexdiv[i] <- temp@MTLD[[1]]
+        
+        #Use Flesch-Kincaid index to evaluate readabilty
+        temp <- readability(token, index = c("Flesch.Kincaid"), quiet = TRUE)
+        read_age[i] <- temp@Flesch.Kincaid[[3]]
     }
     
 #Naive Bayes - Jay
