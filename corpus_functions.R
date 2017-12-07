@@ -60,8 +60,8 @@
         return(corpus)
     }
 
-#       Removes misspelled (non-English) words lang = "en_GB" or "en_US"
-        spelling <- function(corpus, lang = "en_US"){
+#       Removes misspelled (non-English) words lang = "en_GB" or "en_US" 
+        remove_spelling <- function(corpus, lang = "en_US"){
             corpus <- tm_map(corpus, 
                              removeWords,
                              sort(unique(unlist(hunspell_find(as.character(corpus), 
