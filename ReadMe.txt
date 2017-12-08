@@ -31,22 +31,30 @@ PRE-PROCESSING
 
 Data is almost never ready for analysis especially text data. We begin by creating a corpus (large and structured collection of documents) and utilize several common text pre-processing tasks such as:
 
-    o remove punctuation
-    o remove digits
-    o remove extra white space
-    o remove stop words (e.g. the, and, is, for)
-    o conversion to lower case
-    o remove numbers and special characters
-    o stemming
+o remove punctuation
+
+o remove digits
+
+o remove extra white space
+
+o remove stop words (e.g. the, and, is, for)
+
+o conversion to lower case
+
+o remove numbers and special characters
+
+o stemming
 
 The tm_map() function applies these cleaning tasks to the entire corpus. The other major pre-processing component is creating the document term matrix (DTM) which contains the frequency of terms in each document. That is, rows of the DTM represent documents and columns represent a unique term in the corpus. So, the (i,j)th entry of the DTM contains the number of times “term j” appeared in “document i”. By representing the corpus this way, we open the door for machine learning techniques to be used. In particular, algorithms such as Naive Bayes and SVM require that data is represented in the data-frame format.
 
 It is also a good idea to produce a weighted version of the DTM by term frequency-inverse document frequency (tf-idf). This weighted version takes into account how often a term is used in the entire corpus as well as in a single document. The reasoning is that if a term is used in the entire corpus frequently, it is probably not as important when differentiating documents. On the other hand, if a word appears rarely in the corpus, it may be an important distinction even if it only occurs a few times in a document. In this analysis, both the unweighted and tf-idf weighted DTM’s are computed. The performances of various supervised learning methods using both
+
 versions of the DTM are compared. Common terms can also be found (those which appear in at least a specified number of documents) with findFreqTerms() function.
 
 Dimensionality Reduction
 
 Oftentimes the document term matrix is highly dimensional and sparse. It often creates issues for machine learning algorithms during the training phase. For that reason, it is vital to reduce the dimensionality of the dataset by either feature selection or other dimensionality reduction methods. The feature selection selects important features from the original feature set while; the dimensionality reduction methods produce new features from the original set in some other dimension. We will apply Chi-Square as feature selection method.
+
 In essence, the Chi-Square test is used to test the independence of two events. More precisely in feature selection, it is used to test whether the existence of a specific term and the existence of a specific class are independent. We will utilize chi.squared() function from the Fselector package.
 
 Last but not least, the DTM’s were converted into data frames for modeling purposes. We also appended the document source as the last column (article.source) to be used as a target variable in supervised methods.
@@ -57,29 +65,31 @@ JPAT Times is responsible for deploying four different text mining and statistic
 
 · Unsupervised Classification Method
 
-      o Topic Modeling is utilized for discovering the underlying topics that are presented in this unstructured collection of themes or         topics. Latent Dirichlet Allocation assumes that each document corpus contains a mix of topics that are found throughout the             entire corpus. The main strategies are that every word in each document is assigned a topic, the proportion of each unique               topic is estimated for every document, and for every corpus, the topic is distributed and is explored. The topic can then be             assumed to be a probability distribution across the multitude of words. We calculate the probability weights for words and               create topics based on those weights.
+o Topic Modeling is utilized for discovering the underlying topics that are presented in this unstructured collection of themes or topics. Latent Dirichlet Allocation assumes that each document corpus contains a mix of topics that are found throughout the entire corpus. The main strategies are that every word in each document is assigned a topic, the proportion of each unique topic is estimated for every document, and for every corpus, the topic is distributed and is explored. The topic can then be assumed to be a probability distribution across the multitude of words. We calculate the probability weights for words and create topics based on those weights.
 
-      o Word2Vec or Text2Vec: Created by a team of researchers led by Tomas Mikolov at Google, Word2Vec is a group of related models             that are used to produce word embeddings(WEMs) These models are shallow, two-layer neural networks that are trained to                   reconstruct linguistic contexts of words. Word2Vec takes as its input a large corpus of text and produces a vector space,               typically among hundred dimensions, with each unique word in the corpus being assigned a corresponding vector in the space.             Essentially, Word2Vec asks, “what if we could model all relationship between words as spatial ones” or “how can we reduce words         into a field where they are purely defined by their relations? Word2Vec try to reflect similarities in usage between words to           distances in space.
+o Word2Vec or Text2Vec: Created by a team of researchers led by Tomas Mikolov at Google, Word2Vec is a group of related models that are used to produce word embeddings(WEMs) These models are shallow, two-layer neural networks that are trained to reconstruct linguistic contexts of words. Word2Vec takes as its input a large corpus of text and produces a vector space, typically among hundred dimensions, with each unique word in the corpus being assigned a corresponding vector in the space. Essentially, Word2Vec asks, “what if we could model all relationship between words as spatial ones” or “how can we reduce words into a field where they are purely defined by their relations? Word2Vec try to reflect similarities in usage between words to distances in space.
 
-      o Lexical Diversity is used to determine the complexity of the language of each article. There are numerous methods for                   calculating the diversity but we decided to focus on the Measure of Lexical Diversity (MTLD) and the Flesch-Kincaid age level           calculation when analyzing the article text. MTLD was chosen because it’s fairly accepted as a good baseline and is also not             impacted by the document’s length like several other algorithms. The Flesch-Kincaid formula for reading and age level has become         very popular for use in many settings especially education. It generates a score based on how difficult a document is to read           and comprehend which can then be translated into a grade level and age.
+o Lexical Diversity is used to determine the complexity of the language of each article. There are numerous methods for calculating the diversity but we decided to focus on
+
+the Measure of Lexical Diversity (MTLD) and the Flesch-Kincaid age level calculation when analyzing the article text. MTLD was chosen because it’s fairly accepted as a good baseline and is also not impacted by the document’s length like several other algorithms. The Flesch-Kincaid formula for reading and age level has become very popular for use in many settings especially education. It generates a score based on how difficult a document is to read and comprehend which can then be translated into a grade level and age.
 
 · Supervised Classification Methods:
 
-  We will use two classification algorithms to categorize news articles.
+We will use two classification algorithms to categorize news articles.
 
-      o Support Vector Machine (SVM) with linear and radial kernels
+o Support Vector Machine (SVM) with linear and radial kernels
 
-        An SVM model is a representation of the examples as points in space, mapped so that the examples of the separate categories are         divided by a clear gap that is as wide as possible. New examples are then mapped into that same space and predicted to belong to         a category based on which side of the gap they fall on. In addition to performing linear classification, SVMs can efficiently           perform a non-linear classification using what is called the kernel trick, implicitly mapping their inputs into high-dimensional         feature spaces.
+An SVM model is a representation of the examples as points in space, mapped so that the examples of the separate categories are divided by a clear gap that is as wide as possible. New examples are then mapped into that same space and predicted to belong to a category based on which side of the gap they fall on. In addition to performing linear classification, SVMs can efficiently perform a non-linear classification using what is called the kernel trick, implicitly mapping their inputs into high-dimensional feature spaces.
 
-        The main task of an SVM is finding the optimal hyperplane with a maximum distance from the nearest training patterns which are           the support vectors. Only the support vectors are used for prediction/categorization which makes it computationally efficient.
+The main task of an SVM is finding the optimal hyperplane with a maximum distance from the nearest training patterns which are the support vectors. Only the support vectors are used for prediction/categorization which makes it computationally efficient.
 
-      o Naïve Bayes
+o Naïve Bayes
 
-        Naive Bayes is often used for high-dimensional datasets. This makes Naive Bayes applicable for a wide variety of problems, such         as spam filter and in our case article classification.
+Naive Bayes is often used for high-dimensional datasets. This makes Naive Bayes applicable for a wide variety of problems, such as spam filter and in our case article classification.
 
-        Naive Bayes is called ‘naive’ because it treats each of its inputs as an independent. In the case of text data, this is an               erroneous assumption, as textual features are often tied to one another in various ways. Nonetheless, the Naive Bayes classifier         generally achieves very good results on text data.
+Naive Bayes is called ‘naive’ because it treats each of its inputs as an independent. In the case of text data, this is an erroneous assumption, as textual features are often tied to one another in various ways. Nonetheless, the Naive Bayes classifier generally achieves very good results on text data.
 
-        The Naive Bayes model uses the priors which are defined as the number of observations in each class and the number of                   observations for each term over all classes. The likelihood is defined as the number of times a word occurs in each class.
+The Naive Bayes model uses the priors which are defined as the number of observations in each class and the number of observations for each term over all classes. The likelihood is defined as the number of times a word occurs in each class.
 
 For evaluation/comparison purposes we will use repeated 10-fold cross-validation. That is the training data is split into 10 subsets which are called folds. The algorithms are run 10 times each time using a different fold as the training dataset. In order to reduce the overfitting, this is repeated three times and the average error across all trials is computed.
 
@@ -91,9 +101,11 @@ This typically leads to various linguistic and computational challenges for text
 
 · Indexing, categorization/classification
 
-      o Articles are segmented by time and by sources.
-      o Multisource corpus, many articles published around the same time
-      o Same classification/ popular topics (politics, business, world, etc.,)
+o Articles are segmented by time and by sources.
+
+o Multisource corpus, many articles published around the same time
+
+o Same classification/ popular topics (politics, business, world, etc.,)
 
 § May have arbitrary topics
 
@@ -101,8 +113,9 @@ This typically leads to various linguistic and computational challenges for text
 
 · Language and meaning
 
-      o Articles are written in object and structured language
-      o American and British English
+o Articles are written in object and structured language
+
+o American and British English
 
 § Vocabulary – (vacation vs. holiday, apartments vs. flats, cookies vs. biscuits)
 
