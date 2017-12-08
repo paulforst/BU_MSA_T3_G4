@@ -110,6 +110,10 @@
 #   ____________________________________________________________________________
 #   SVM                                                                     ####
 
+    library(parallelSVM) # <= this could speed up the process
+    
+    
+    
 #   set resampling scheme: 10-fold cross-validation, 3 times 
     ctrl <- trainControl(method="repeatedcv", number = 5, repeats = 1) 
     
@@ -117,21 +121,20 @@
 #   kernel: linear 
 #   tuning parameters: C 
     set.seed(123)
-    svm.tfidf.linear  <- train(article.source ~ . , data = tdm2[train_index,], trControl = ctrl, method = "svmLinear")
+    svm_mod  <- train(article.source ~ . , data = tdm2[train_index,], trControl = ctrl, method = "svmLinear")
     
 #   fit another multiclass SVM using the weighted (td-idf) term document matrix
-#   kernel: radial basis function
-#   tuning parameters: sigma, C 
+#   kernel: linear
+#   tuning parameters: C 
     set.seed(123)
-    svm.tfidf.radial  <- train(article.source ~ . , data = weightedtdm[train_index,], trControl = ctrl, method = "svmRadial")
+    svm_mod_weight  <- train(article.source ~ . , data = weightedtdm[train_index,], trControl = ctrl, method = "svmLinear")
     
-#   predict on test data
-    svm.tfidf.linear.predict <- predict(svm.tfidf.linear, newdata = tdm2[test_index,])
-    svm.tfidf.radial.predict <- predict(svm.tfidf.radial, newdata = weightedtdm[test_index,])
+#   predict on test data and print the result statistics
+    svm_mod.pred <- predict(svm_mod, newdata = tdm2[test_index,-which(names(tdm2)=="article.source")] )
+    print(confusionMatrix(svm_mod.pred, tdm2[test_index, which(names(tdm2)=="article.source")]) )
     
-    
-
-
+    svm_mod_weight.pred <- predict(svm_mod_weight, newdata = weightedtdm[test_index, -which(names(tdm2)=="article.source")])
+    print(confusionMatrix(svm_mod_weight.pred, weightedtdm[test_index, which(names(tdm2)=="article.source")]) )
 #   ____________________________________________________________________________
 #   Naive Bayes with h2o package                                            ####
 
