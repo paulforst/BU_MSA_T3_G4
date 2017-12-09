@@ -142,20 +142,57 @@
 #   Initialize lexical diversity variables     
     lexdiv <- NULL
     read_age <- NULL
+
+#   Pull only the text body from the data set
+    text_body <- combined_data$body
+    
+#   Create progress bar
+    pb <- winProgressBar(title = "Calculating Lexical Diversity", min = 0, max = length(text_body), width = 400)
     
 #   Loop through each article body to general lexical diversity
-    text_body <- combined_data$body
-    for (i in 1:length(text_body)) {
+    system.time(for (i in 1:length(text_body)) {
+        print(i)
         token <- tokenize(text_body[i], format = "obj", lang = "en")
-        
-        #Use Measure of Textual Lexical Diversity
+    #Use Measure of Textual Lexical Diversity
         temp <- koRpus::MTLD(token, quiet = TRUE)
-        lexdiv[i] <- temp@MTLD[[1]]
-        
+        lexdiv[i] <- temp@MTLD$MTLD
+        #MTLD alone takes approx an hour to run
+   
         #Use Flesch-Kincaid index to evaluate readabilty
         temp <- readability(token, index = c("Flesch.Kincaid"), quiet = TRUE)
-        read_age[i] <- temp@Flesch.Kincaid[[3]]
-    }
+        read_age[i] <- temp@Flesch.Kincaid$age
+        #Took almost 12 hours to complete by itself; really slows down as it goes along
+        
+        # Update the progress bar
+        setWinProgressBar(pb, i, title=paste("Calculating Lexical Diversity: ",round(i/length(text_body)*100, 1),"% done"))
+    })
+    
+    close(pb)
+    
+    #Join MTLD and Flesch-Kincaid to main data set
+    combined_data <- cbind(combined_data, lexdiv, read_age)
+    
+    #Save new data set to prevent the need to run loop in future
+    save(combined_data, file = "combined_final_with_lexdiv.Rdata")
+    
+    #Clean-up temp variables
+    rm(pb)
+    rm(temp)
+    rm(token)
+    rm(lexdiv)
+    rm(read_age)
+    rm(text_body)
+    
+    #Plot the MTLD and Reading Levels for both sources
+    ggplot(combined_data, aes(x=source, y=lexdiv)) + 
+        geom_boxplot()
+    #The Guardian tends to have a higher diversity but there are numerous outliers
+    
+    ggplot(combined_data, aes(x=source, y=read_age)) + 
+        geom_boxplot()
+    #Small spread between the two sources that generally overlap. Likely not a good differentiator
+    
+    
     
 #Naive Bayes - Jay
 #SVM - Jay
