@@ -183,16 +183,30 @@
     rm(read_age)
     rm(text_body)
     
-    #Plot the MTLD and Reading Levels for both sources
+#   Plot the MTLD and Reading Levels for both sources
     ggplot(combined_data, aes(x=source, y=lexdiv)) + 
         geom_boxplot()
-    #The Guardian tends to have a higher diversity but there are numerous outliers
+#   The Guardian tends to have a higher diversity but there are numerous outliers
     
     ggplot(combined_data, aes(x=source, y=read_age)) + 
         geom_boxplot()
-    #Small spread between the two sources that generally overlap. Likely not a good differentiator
+#   Small spread between the two sources that generally overlap. Likely not a good differentiator
     
+#   Plot by source and section 
+    source_section <- combined_data %>% 
+        group_by(source, section) %>% 
+        summarize(avg_lexdiv = mean(lexdiv),
+               max_lexdiv = max(lexdiv),
+               min_lexdiv = min(lexdiv),
+               avg_read = mean(read_age),
+               max_read = max(read_age),
+               min_read = min(read_age)
+               )
+    ggplot(combined_data, aes(x = section, y=lexdiv, color = source)) + 
+               geom_boxplot()
     
+    ggplot(combined_data, aes(x = section, y=read_age, color = source)) + 
+        geom_boxplot()
     
 #   Naive Bayes - Jay
 #   SVM - Jay
