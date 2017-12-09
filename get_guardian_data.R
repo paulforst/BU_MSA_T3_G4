@@ -28,7 +28,9 @@
     
     # Create url for each section
     urls <- lapply(sections, function(x) {
-        paste0("http://content.guardianapis.com/search?section=", x, paste0("&order-by=newest&show-fields=body&page-size=50&api-key=", guardian_key))
+        paste0("http://content.guardianapis.com/search?section=", 
+               x, paste0("&order-by=newest&show-fields=body&page-size=50&api-key=", 
+                         guardian_key))
     })
     
 #   ____________________________________________________________________________

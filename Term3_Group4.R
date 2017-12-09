@@ -136,8 +136,8 @@
 
 #   Create Train, Test and Validation sets
 
-#WordToVec - Andrew
-#Lexical Diversity - Paul
+#   WordToVec - Andrew
+#   Lexical Diversity - Paul
 
 #   Initialize lexical diversity variables     
     lexdiv <- NULL
@@ -194,25 +194,25 @@
     
     
     
-#Naive Bayes - Jay
-#SVM - Jay
+#   Naive Bayes - Jay
+#   SVM - Jay
 
 
-#Test Model
-#Validate Model
+#   Test Model
+#   Validate Model
 
-#Use DB for data organization - use it for document lookup or article URL?
+#   Use DB for data organization - use it for document lookup or article URL?
 
-#Classification
-#Sentiment Analysis
-#Naive Bayes Classification
-#K-Folds Validation
-#Latent Semantic Analysis (aka Latent Semantic Indexing)
-#Binary classification on multiple sources
-#Article filtering
-#Optimization - penalty for misclassification
+#   Classification
+#   Sentiment Analysis
+#   Naive Bayes Classification
+#   K-Folds Validation
+#   Latent Semantic Analysis (aka Latent Semantic Indexing)
+#   Binary classification on multiple sources
+#   Article filtering
+#   Optimization - penalty for misclassification
 #
 #
 #
-#Test the Access 
+#   Test the Access 
 #
