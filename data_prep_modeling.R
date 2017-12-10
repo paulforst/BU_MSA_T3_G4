@@ -115,7 +115,7 @@
     
     
 #   set resampling scheme: 10-fold cross-validation, 3 times 
-    ctrl <- trainControl(method="repeatedcv", number = 5, repeats = 1) 
+    ctrl <- trainControl(method="repeatedcv", number = 10, repeats = 3) 
     
 #   fit a multiclass SVM using the weighted (td-idf) term document matrix
 #   kernel: linear 
