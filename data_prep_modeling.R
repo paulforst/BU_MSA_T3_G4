@@ -100,11 +100,7 @@
     
 #   Select top # variables
     subset<- cutoff.k(feature_weights, 1500)
-    
-    
-#   Print the final formula that can be used in classification
-    func <- as.simple.formula(subset, "class")
-    print(f)
+
 
     
 #   ____________________________________________________________________________
