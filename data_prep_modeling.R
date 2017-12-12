@@ -100,11 +100,7 @@
     
 #   Select top # variables
     subset<- cutoff.k(feature_weights, 1500)
-    
-    
-#   Print the final formula that can be used in classification
-    func <- as.simple.formula(subset, "class")
-    print(f)
+
 
     
 #   ____________________________________________________________________________
@@ -177,8 +173,17 @@
     
         
 #   Calculate performance measures at threshold that maximizes precision
-    bayes.pred = as.data.frame( h2o.predict(bayes_mod, newdata = test_tdm2.h2o, type = "Class" ))
+    bayes.pred <-   h2o.predict(bayes_mod, newdata = test_tdm2.h2o )
+    bayes.weight.pred <- h2o.predict(bayes_mod_weight, newdata = test_weightedtdm.h2o)
     
+#   Manipulation to get the Confusion Matrix out of H2o object for modeling comparison purposes
+    x <- NULL
+    x$predict <- as.vector( bayes.weight.pred[[1]])
+    x$actual <- as.vector( test_weightedtdm.h2o[which(names(tdm2)=="article.source")])
+   
+    df <- data.frame(matrix(unlist(x), nrow= 3077, byrow=T),stringsAsFactors=FALSE)
+    
+    confusionMatrix(x$predict, x$actual) 
 
 #   ____________________________________________________________________________
 #   GBM                                                                     ####
@@ -221,4 +226,17 @@
 #   We can check the variable importance and select only ones that have scaled importance of >= 0.001
     gbm_mod_weight@model$variable_importances
     var_imp <- gbm_mod_weight@model$variable_importances[gbm_mod_weight@model$variable_importances$scaled_importance >= 0.001,]
+   
+    #   Calculate performance measures at threshold that maximizes precision
+    gbm.pred <-   h2o.predict(gbm_mod, newdata = test_tdm2.h2o )
+    bayes.weight.pred <- h2o.predict(bayes_mod_weight, newdata = test_weightedtdm.h2o)
     
+    #   Manipulation to get the Confusion Matrix out of H2o object for modeling comparison purposes
+    x <- NULL
+    x$predict <- as.vector( bayes.weight.pred[[1]])
+    x$actual <- as.vector( test_weightedtdm.h2o[which(names(tdm2)=="article.source")])
+    
+    df <- data.frame(matrix(unlist(x), nrow= nrow.H2OFrame(test_weightedtdm.h2o), byrow=T),stringsAsFactors=FALSE)
+    
+    confusionMatrix(x$predict, x$actual) 
+     
