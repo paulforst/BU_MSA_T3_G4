@@ -38,3 +38,17 @@
                   geom_col(show.legend = FALSE) +
                   facet_wrap(~ topic, scales = "free") +
                   coord_flip() + ggtitle('Top terms in each LDA topic')
+
+    
+    
+    corp_guardian <- clean.corpus(combined_data[combined_data$source == "Guardian"]$body, stemming = TRUE)
+    
+    corp_nyt <- clean.corpus(combined_data[!combined_data$source == "Guardian"]$body, stemming = TRUE)
+
+    dtm_guardian <- DocumentTermMatrix(corp_guardian)
+        
+    dtm_nyt <- DocumentTermMatrix(corp_nyt)
+
+    save(dtm_guardian, file = "dtm_guardian.Rdata")    
+    save(dtm_nyt, file = "dtm_nyt.Rdata")    
+    
