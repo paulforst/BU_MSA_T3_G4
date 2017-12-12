@@ -203,17 +203,19 @@
                min_read = min(read_age)
                )
     
-    ggplot(combined_data, aes(x = section, y=lexdiv, color = source)) + 
+    ggplot(combined_data) + 
+        aes(x = section, y = lexdiv, color = source) + 
         geom_boxplot() + 
-        xlab("Section") + 
-        ylab("Measure of Textual Lexical Diversity")
+        labs(x = "Section", y = "Measure of Textual Lexical Diversity", colour="Source") + 
+        theme_bw(base_size = 20)
         
-    
-    ggplot(combined_data, aes(x = section, y=read_age, color = source)) + 
+    ggplot(combined_data) + 
+        aes(x = section, y = read_age, color = source) + 
         geom_boxplot() + 
-        xlab("Section") + 
-        ylab("Flesch-Kincaid Reading Age Index")
-    
+        labs(x = "Section",  y = "Flesch-Kincaid Reading Age Index", colour="Source") +
+        coord_cartesian(ylim = c(0, 30)) + 
+        theme_bw(base_size = 20)
+
 #   Naive Bayes - Jay
 #   SVM - Jay
 
