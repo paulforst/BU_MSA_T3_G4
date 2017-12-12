@@ -24,8 +24,6 @@
     
     sections <- c("sport", "world", "politics", "travel")
     
-    guardian_key <- "10a7a2d3-3748-4887-ba17-e6435f523b4c"
-    
     # Create url for each section
     urls <- lapply(sections, function(x) {
         paste0("http://content.guardianapis.com/search?section=", 
@@ -87,7 +85,7 @@
     })
     
     # Get the file names with .Rdata extension
-    files <- list.files(path=getwd(), pattern="Rdata$", full.names = FALSE, recursive = FALSE)
+    files <- list.files(path=getwd(), pattern="guardian.Rdata$", full.names = FALSE, recursive = FALSE)
     
     # Create a vector of files
     master <- vector("list", length(files))
@@ -134,7 +132,7 @@
 #   Output                                                                  ####
 
     # Convert results to the data frame
-    final_data <- to_df(master)
+    final_data <<- to_df(master)
     
     
     # Convert section variable to factor
@@ -149,11 +147,3 @@
     
     # Save as Rdata
     save(final_data, file = "guardian_final.Rdata")
-
-  
-    save(body_container, file = "nyt_body.Rdata")
-
-
-
-
-
